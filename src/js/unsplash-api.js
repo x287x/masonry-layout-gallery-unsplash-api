@@ -7,7 +7,7 @@ let page = 1;
 
 /**
  *
- * @returns {Promise}
+ * @returns {Promise} 
  */
 export function getPage() {
 	const paginationParams = new URLSearchParams({
