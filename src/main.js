@@ -1,1 +1,3 @@
-document.querySelector("#test").innerText = "Hello World";
+import "./scss/main.scss";
+import "./js/masonry";
+import { getPage } from "./js/unsplash-api";

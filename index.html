@@ -1,16 +1,39 @@
 <!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Vite App</title>
-  </head>
-  <body>
+
+<head>
+  <meta charset="UTF-8" />
+  <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Masonry Layout Gallery using Unsplash API</title>
+</head>
+
+<body>
 
 
-	<div id="test"></div>
+  <div class="margin-inline-10">
+    <div class="masonry-container">
+      <div class="grid-sizer"></div>
+      <div class="gutter-sizer"></div>
+    </div>
+  </div>
 
-    <script type="module" src="/src/main.js"></script>
-  </body>
+  <template>
+    <div class="pin grid-item">
+      <div class="pin__img-wrapper">
+        <img class="pin__img-wrapper__img" src="" alt="" id="pinImg">
+      </div>
+      <p class="pin__desc" id="pinDesc"></p>
+      <div class="pin__artist-info">
+        <img src="" alt="" class="pin__artist-info__artist-img" id="artistImg">
+        <a href="" class="pin__artist-info__artist-link" id="artistLink">
+          <span id="artistName"></span>
+        </a>
+      </div>
+    </div>
+  </template>
+
+  <script type="module" src="/src/main.js"></script>
+</body>
+
 </html>
