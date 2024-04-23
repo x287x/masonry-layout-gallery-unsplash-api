@@ -7,7 +7,7 @@ let page = 1;
 
 /**
  *
- * @returns {Promise} 
+ * @returns {Promise}
  */
 export function getPage() {
 	const paginationParams = new URLSearchParams({
@@ -17,7 +17,10 @@ export function getPage() {
 	const headers = new Headers({
 		Authorization: `Client-ID ${ACCESS_KEY}`,
 	});
-	const url = `${host}/photos?${paginationParams.toString()}`;
+	// const url = `${host}/photos?${paginationParams.toString()}`;
+	const url = "/all.json";
 
-	return fetch(url, { headers }).then((res) => res.json());
+	return fetch(url, { headers })
+		.then((res) => res.json())
+		.catch((error) => console.warn(error.message));
 }
