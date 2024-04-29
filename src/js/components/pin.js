@@ -28,8 +28,8 @@ export function getPin(img) {
 	pinImg.width = img.width;
 	pinImg.height = img.height;
 	pinImg.style.color = "transparent";
-	// pinImg.srcset = getSrcset(src);
-	// pinImg.sizes = getSizes();
+	setSrcset(pinImg, pinImg.src);
+	setSizes(pinImg);
 
 	pinImg.onload = () => (pinImg.style.color = "revert");
 	pinImg.onerror = () => (pinImg.style.color = "revert");
@@ -55,17 +55,47 @@ export function getPin(img) {
 
 /**
  *
- * @param {string} src
+ * @param {HTMLImageElement}
+ * @param {string} src - img.urls.small
  * @returns {string}
  */
-function getSrcset(src) {
-	// return srcset;
+function setSrcset(elem, src) {
+	src = src.replace("&w=400", "");
+
+	const srcset = new Map();
+	for (let i = 1; i < 11; i++) {
+		srcset.set(`${i * 100}w`, `${src}&w=${i * 100}`);
+	}
+	for (let i = 1; i < 6; i++) {
+		srcset.set(`${1000 + i * 200}w`, `${src}&w=${1000 + i * 200}`);
+	}
+
+	let srcsetString = "";
+	srcset.forEach((v, k) => {
+		srcsetString = srcsetString.concat(v, " ", k, ", ");
+	});
+
+	elem.srcset = srcsetString;
 }
 
 /**
  *
+ * @param {HTMLImageElement}
  * @returns {string}
  */
-function getSizes() {
-	// return sizes;
+
+/**
+ *   768px: calc(100vw - (5 * --column-gap-desktop) / 4)
+ *   576px: calc(100vw - (4 * --column-gap-desktop) / 3)
+ * 	 mobile: calc(100vw - (3 * --column-gap-mobile) / 2)
+ */
+function setSizes(elem) {
+	const sizesString = `
+		(min-width: 992px) 236px,
+		(min-width: 768px) calc( (100vw - 80px) / 4),
+		(min-width: 576px) calc( (100vw - 64px) / 3),
+		calc((100vw - 24px) / 2),
+	`;
+
+	elem.sizes = sizesString;
 }

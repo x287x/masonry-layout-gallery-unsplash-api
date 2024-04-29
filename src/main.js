@@ -33,11 +33,9 @@ if (desktopMatcher.matches) {
 
 desktopMatcher.addEventListener("change", (e) => {
 	if (e.matches) {
-		console.log("desktop");
 		masonry.destroy();
 		masonry = new Masonry(container, desktopOptions);
 	} else {
-		console.log("mobile");
 		masonry.destroy();
 		masonry = new Masonry(container, mobileOptions);
 	}
@@ -46,80 +44,38 @@ desktopMatcher.addEventListener("change", (e) => {
 let imageObjects = [];
 let loadingNextPage = false;
 
-getPage().then((data) => {
-	let nodes = [];
-	for (let i = 0; i < 10; i++) {
-		const img = data.shift();
-		const pin = getPin(img);
+const observer = new IntersectionObserver(
+	(entries, self) => {
+		entries.forEach((entry) => {
+			if (entry.isIntersecting) {
+				const img = imageObjects.shift();
 
-		nodes.push(pin);
+				if (!img && !loadingNextPage) {
+					console.log("loading next page");
+					loadingNextPage = true;
+					getPage()
+						.then((data) => {
+							imageObjects.push(...data);
+							loadingNextPage = false;
+						})
+						.catch((error) => {
+							console.warn(error.message);
+						});
+				} else if (img) {
+					const pin = getPin(img);
+					console.log(imageObjects.length);
+					container.append(pin);
+					masonry.appended(pin);
+				}
+
+				self.unobserve(entry.target);
+				self.observe(entry.target);
+			}
+		});
+	},
+	{
+		rootMargin: "0px 0px 1000px 0px",
 	}
-	container.append(...nodes);
-	masonry.appended(nodes);
-	return { nodes, data };
-});
-// .then((data) => {
-// 	let nodes = [];
-// 	for (let i = 0; i < 10; i++) {
-// 		const img = data.shift();
-// 		const pin = getPin(
-// 			img.urls.small,
-// 			img.alt_description,
-// 			img.width,
-// 			img.height,
-// 			img.color,
-// 			img.description,
-// 			img.user.profile_image.small,
-// 			img.user.name,
-// 			img.user.links.html
-// 		);
+);
 
-// 		nodes.push(pin);
-// 	}
-// 	container.append(...nodes);
-// 	if (desktopMatcher.matches) {
-// 		masonry.destroy();
-// 		masonry = new Masonry(container, desktopOptions);
-// 	} else {
-// 		masonry.destroy();
-// 		masonry = new Masonry(container, mobileOptions);
-// 	}
-// 	return { nodes, data };
-// });
-
-// const observer = new IntersectionObserver((entries, self) => {
-// 	entries.forEach((entry) => {
-// 		if (entry.isIntersecting) {
-// 			const img = imageObjects.shift();
-
-// 			if (!img) {
-// 				console.log("list is empty");
-// 				if (!loadingNextPage) {
-// 					loadingNextPage = true;
-// 					getPage()
-// 						.then((data) => imageObjects.push(...data))
-// 						.then(() => (loadingNextPage = false));
-// 				}
-// 			} else {
-// 				const pin = getPin(
-// 					img.urls.small,
-// 					img.alt_description,
-// 					img.width,
-// 					img.height,
-// 					img.color,
-// 					img.description,
-// 					img.user.profile_image.small,
-// 					img.user.name,
-// 					img.user.links.self
-// 				);
-// 				container.appendChild(pin);
-// 				masonry.appended(pin);
-// 			}
-
-// 			observer.unobserve(entry.target);
-// 			observer.observe(entry.target);
-// 		}
-// 	});
-// });
-
-// observer.observe(bottom);
+observer.observe(bottom);

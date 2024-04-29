@@ -17,10 +17,11 @@ export function getPage() {
 	const headers = new Headers({
 		Authorization: `Client-ID ${ACCESS_KEY}`,
 	});
-	// const url = `${host}/photos?${paginationParams.toString()}`;
-	const url = "/all.json";
+	const url = `${host}/photos?${paginationParams.toString()}`;
 
 	return fetch(url, { headers })
 		.then((res) => res.json())
-		.catch((error) => console.warn(error.message));
+		.catch((error) => {
+			console.warn(error.message);
+		});
 }
